@@ -47,6 +47,7 @@
     <Compile Include="ClientConfiguration.cs" />
     <Compile Include="ErrorInfo.cs" />
     <Compile Include="ErrorList.cs" />
+    <Compile Include="ISmtpClient.cs" />
     <Compile Include="Mail.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -5,9 +5,9 @@ namespace Mailer {
 
     public class Mail {
         private Options _options;
-        private ClientConfiguration _clientConfiguration;
+        private ISmtpClient _client;
 
-        public MailMessage GetMessageFromOptions() {
+        private MailMessage GetMessageFromOptions() {
             MailMessage message = new MailMessage();
             string[] requiredFields = new string[] { "From", "To", "Subject", "Body" };
             foreach (string requiredField in requiredFields) {
@@ -22,9 +22,9 @@ namespace Mailer {
             return message;
         }
 
-        public Mail(Options options, ClientConfiguration configuration) {
+        public Mail(Options options, ISmtpClient client) {
             this._options = options;
-            this._clientConfiguration = configuration;
+            this._client = client;
         }
 
         public ErrorList Validate() {
@@ -32,14 +32,13 @@ namespace Mailer {
             if (this.ValidateOptions().HasErrors) {
                 errors.Add(new ErrorInfo("Options", "Can't be invalid"));
             }
-            if (this.ValidateClientConfiguration().HasErrors) {
-                errors.Add(new ErrorInfo("ClientConfiguration", "Can't be invalid"));
-            }
             return errors;
         }
 
         public void Send() {
             MailMessage message = GetMessageFromOptions();
+            if (_client != null)
+                _client.Send(message);
         }
 
         private void ThrowInvalidOperationIfErrorOnField(string fieldName) {
@@ -50,10 +49,6 @@ namespace Mailer {
 
         private ErrorList ValidateOptions() {
             return this._options.Validate();
-        }
-
-        private ErrorList ValidateClientConfiguration() {
-            return this._clientConfiguration.Validate();
         }
 
         private void ConvertStringToMailAddressCollection(MailAddressCollection addresses, string addressSeperatedByCommas) {
