@@ -50,6 +50,7 @@
     <Compile Include="ErrorInfoTest.cs" />
     <Compile Include="ErrorListTest.cs" />
     <Compile Include="MailerTest.cs" />
+    <Compile Include="NativeSmtpClientTest.cs" />
     <Compile Include="OptionsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

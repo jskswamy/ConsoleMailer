@@ -7,21 +7,6 @@ namespace Mailer {
         private Options _options;
         private ISmtpClient _client;
 
-        private MailMessage GetMessageFromOptions() {
-            MailMessage message = new MailMessage();
-            string[] requiredFields = new string[] { "From", "To", "Subject", "Body" };
-            foreach (string requiredField in requiredFields) {
-                ThrowInvalidOperationIfErrorOnField(requiredField);
-            }
-            message.From = new MailAddress(this._options.From);
-            message.Subject = this._options.Subject;
-            message.Body = this._options.Body;
-            ConvertStringToMailAddressCollection(message.To, this._options.To);
-            ConvertStringToMailAddressCollection(message.CC, this._options.Cc);
-            ConvertStringToMailAddressCollection(message.Bcc, this._options.Bcc);
-            return message;
-        }
-
         public Mail(Options options, ISmtpClient client) {
             this._options = options;
             this._client = client;
@@ -37,8 +22,22 @@ namespace Mailer {
 
         public void Send() {
             MailMessage message = GetMessageFromOptions();
-            if (_client != null)
-                _client.Send(message);
+            _client.Send(message);
+        }
+
+        private MailMessage GetMessageFromOptions() {
+            MailMessage message = new MailMessage();
+            string[] requiredFields = new string[] { "From", "To", "Subject", "Body" };
+            foreach (string requiredField in requiredFields) {
+                ThrowInvalidOperationIfErrorOnField(requiredField);
+            }
+            message.From = new MailAddress(this._options.From);
+            message.Subject = this._options.Subject;
+            message.Body = this._options.Body;
+            ConvertStringToMailAddressCollection(message.To, this._options.To);
+            ConvertStringToMailAddressCollection(message.CC, this._options.Cc);
+            ConvertStringToMailAddressCollection(message.Bcc, this._options.Bcc);
+            return message;
         }
 
         private void ThrowInvalidOperationIfErrorOnField(string fieldName) {

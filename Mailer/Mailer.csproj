@@ -49,6 +49,7 @@
     <Compile Include="ErrorList.cs" />
     <Compile Include="ISmtpClient.cs" />
     <Compile Include="Mail.cs" />
+    <Compile Include="NativeSmtpClient.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
