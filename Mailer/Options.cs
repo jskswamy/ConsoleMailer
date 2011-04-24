@@ -75,7 +75,7 @@ namespace Mailer {
             Type optionsType = Assembly.GetExecutingAssembly().GetType("Mailer.Options");
             var help = new StringBuilder();
 
-            help.AppendLine("CommandLine Utility to send email using SMTP protocol");
+            help.AppendLine(String.Format("CommandLine Utility to send email using SMTP protocol {0}", System.Environment.NewLine));
             foreach (FieldInfo field in optionsType.GetFields()) {
                 foreach (Attribute attribute in Attribute.GetCustomAttributes(field)) {
                     Type attributeType = attribute.GetType();
@@ -85,7 +85,7 @@ namespace Mailer {
                     }
                 }
             }
-            return help.ToString();
+            return help.AppendLine().ToString();
         }
     }
 }

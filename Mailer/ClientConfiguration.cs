@@ -45,7 +45,7 @@ namespace Mailer {
                 UserName = "username",
                 Password = "password",
                 Host = "smtp.gmail.com",
-                Port = 465,
+                Port = 587,
                 Ssl = true
             };
         }

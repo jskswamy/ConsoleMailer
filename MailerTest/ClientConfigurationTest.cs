@@ -84,7 +84,7 @@ namespace MailerTest {
             ClientConfiguration configuration = ClientConfiguration.CreateSampleConfiguration();
 
             Assert.AreEqual("smtp.gmail.com", configuration.Host);
-            Assert.AreEqual(465, configuration.Port.Value);
+            Assert.AreEqual(587, configuration.Port.Value);
             Assert.AreEqual("username", configuration.UserName);
             Assert.AreEqual("password", configuration.Password);
             Assert.AreEqual(true, configuration.Ssl);

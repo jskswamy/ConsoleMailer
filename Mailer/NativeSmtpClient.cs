@@ -21,6 +21,8 @@ namespace Mailer {
                 throw new InvalidOperationException(error.ToString());
             }
             SmtpClient client = new SmtpClient(Configuration.Host, Configuration.Port.Value);
+            client.UseDefaultCredentials = false;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.Credentials = new NetworkCredential(Configuration.UserName, Configuration.Password);
             client.EnableSsl = Configuration.Ssl.Value;
             client.Send(message);

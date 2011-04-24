@@ -32,7 +32,7 @@ namespace MailerTest {
             StringWriter writer = new StringWriter();
             CommandLineParserSettings settings = new CommandLineParserSettings(writer);
             StringBuilder expectedHelpText = new StringBuilder();
-            expectedHelpText.AppendLine("CommandLine Utility to send email using SMTP protocol");
+            expectedHelpText.AppendLine(String.Format("CommandLine Utility to send email using SMTP protocol {0}", System.Environment.NewLine));
             expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "f", "from".PadRight(15, ' '), "From address"));
             expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "t", "to".PadRight(15, ' '), "To address seperated by comma"));
             expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "c", "cc".PadRight(15, ' '), "Cc address seperated by comma"));
@@ -44,7 +44,7 @@ namespace MailerTest {
             expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "g", "generate".PadRight(15, ' '), "Generates sample configuration file"));
 
             Options option = Options.Create(args, settings);
-            Assert.AreEqual(expectedHelpText.ToString(), writer.ToString());
+            Assert.AreEqual(expectedHelpText.AppendLine().ToString(), writer.ToString());
         }
 
         [Test]
