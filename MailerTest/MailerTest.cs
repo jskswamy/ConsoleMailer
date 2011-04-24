@@ -3,6 +3,7 @@ using System.Net.Mail;
 using Mailer;
 using NUnit.Framework;
 using Moq;
+using System.IO;
 
 namespace MailerTest {
 
@@ -173,6 +174,23 @@ namespace MailerTest {
 
             mail.Send();
             mock.VerifyAll();
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void MailMessageShouldThrowFileNotExceptionIfTheAttachementIsNotFound() {
+            string[] args = new string[] { "-ffrom@someone.com", "-tsomeone@someone.com,someonelse@someone.com", "-sTest", "-mBody", "-aabc.txt" };
+            var mock = new Mock<ISmtpClient>();
+            Mail mail = new Mail(Options.Create(args), mock.Object);
+            mock.Setup(client => client.Send(It.IsAny<MailMessage>())).Callback((MailMessage message) => {
+                Assert.IsNotEmpty(message.Attachments);
+                Assert.AreEqual(1, message.Attachments.Count);
+                Assert.AreEqual("abc.txt", message.Attachments[0].Name);
+            });
+
+            mail.Send();
+            mock.VerifyAll();
+            File.Delete("abc.txt");
         }
     }
 }

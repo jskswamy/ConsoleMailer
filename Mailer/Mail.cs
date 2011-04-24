@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Mail;
+using System.Collections.Generic;
 
 namespace Mailer {
 
@@ -37,6 +38,7 @@ namespace Mailer {
             ConvertStringToMailAddressCollection(message.To, this._options.To);
             ConvertStringToMailAddressCollection(message.CC, this._options.Cc);
             ConvertStringToMailAddressCollection(message.Bcc, this._options.Bcc);
+            LoadAttachments(message, this._options.Attachment);
             return message;
         }
 
@@ -50,10 +52,19 @@ namespace Mailer {
             return this._options.Validate();
         }
 
-        private void ConvertStringToMailAddressCollection(MailAddressCollection addresses, string addressSeperatedByCommas) {
-            foreach (string address in addressSeperatedByCommas.Split(',')) {
+        private void ConvertStringToMailAddressCollection(MailAddressCollection addresses, List<string> addresseList) {
+            if (addresseList == null) return;
+            foreach (string address in addresseList) {
                 if (!String.IsNullOrEmpty(address))
                     addresses.Add(address);
+            }
+        }
+
+        private void LoadAttachments(MailMessage message, List<string> fileNames) {
+            if (fileNames == null) return;
+            foreach (string fileName in fileNames) {
+                if (!string.IsNullOrEmpty(fileName))
+                    message.Attachments.Add(new Attachment(fileName));
             }
         }
     }

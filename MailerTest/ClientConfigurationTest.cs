@@ -78,5 +78,16 @@ namespace MailerTest {
             Assert.AreEqual(1, errors.Count);
             Assert.AreEqual("Ssl can't be blank", errors[0].ToString());
         }
+
+        [Test]
+        public void ShouldReturnDummyGmailConfiguration() {
+            ClientConfiguration configuration = ClientConfiguration.CreateSampleConfiguration();
+
+            Assert.AreEqual("smtp.gmail.com", configuration.Host);
+            Assert.AreEqual(465, configuration.Port.Value);
+            Assert.AreEqual("username", configuration.UserName);
+            Assert.AreEqual("password", configuration.Password);
+            Assert.AreEqual(true, configuration.Ssl);
+        }
     }
 }

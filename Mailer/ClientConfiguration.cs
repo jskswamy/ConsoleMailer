@@ -39,5 +39,15 @@ namespace Mailer {
             }
             return errors;
         }
+
+        public static ClientConfiguration CreateSampleConfiguration() {
+            return new ClientConfiguration() {
+                UserName = "username",
+                Password = "password",
+                Host = "smtp.gmail.com",
+                Port = 465,
+                Ssl = true
+            };
+        }
     }
 }
