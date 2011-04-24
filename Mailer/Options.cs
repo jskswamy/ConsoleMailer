@@ -2,6 +2,7 @@
 using System.Reflection;
 using CommandLine;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Mailer {
 
@@ -31,11 +32,14 @@ namespace Mailer {
         [Option("l", "configration", Required = true, HelpText = "Mail client configuration file")]
         public string ConfigurationFile = string.Empty;
 
+        [Option("g", "generate", Required = false, HelpText = "Generates sample configuration file")]
+        public string SampleConfigurationFilePath = string.Empty;
+
         private Options() {
         }
 
         public static Options Create(string[] args) {
-            return Create(args, new CommandLineParserSettings(false));
+            return Create(args, new CommandLineParserSettings(false, true));
         }
 
         public static Options Create(string[] args, CommandLineParserSettings settings) {
@@ -51,13 +55,12 @@ namespace Mailer {
             ErrorList errors = new ErrorList();
 
             foreach (FieldInfo field in optionsType.GetFields()) {
-                foreach (Attribute attr in Attribute.GetCustomAttributes(field)) {
-                    Type attributeType = attr.GetType();
+                foreach (Attribute attribute in Attribute.GetCustomAttributes(field)) {
+                    Type attributeType = attribute.GetType();
                     if (attributeType.IsSubclassOf(typeof(BaseOptionAttribute))) {
-                        if (((BaseOptionAttribute)attr).Required) {
+                        if (((BaseOptionAttribute)attribute).Required) {
                             object fieldValue = field.GetValue(this);
                             bool blank = fieldValue == null ? true : (fieldValue.GetType().Equals(typeof(string)) ? string.IsNullOrEmpty(((string)fieldValue)) : false);
-                            Console.WriteLine("{0}: {1}", field.Name, blank);
                             if (blank) { errors.Add(new ErrorInfo(field.Name, "Can't be blank")); }
                         }
                     }
@@ -65,6 +68,24 @@ namespace Mailer {
             }
 
             return errors;
+        }
+
+        [HelpOption(HelpText = "Dispaly this help screen.")]
+        public string GetUsage() {
+            Type optionsType = Assembly.GetExecutingAssembly().GetType("Mailer.Options");
+            var help = new StringBuilder();
+
+            help.AppendLine("CommandLine Utility to send email using SMTP protocol");
+            foreach (FieldInfo field in optionsType.GetFields()) {
+                foreach (Attribute attribute in Attribute.GetCustomAttributes(field)) {
+                    Type attributeType = attribute.GetType();
+                    if (attributeType.IsSubclassOf(typeof(BaseOptionAttribute))) {
+                        BaseOptionAttribute optionAttribute = (BaseOptionAttribute)attribute;
+                        help.AppendLine(String.Format("-{0} -{1}{2}", optionAttribute.ShortName, optionAttribute.LongName.PadRight(15, ' '), optionAttribute.HelpText));
+                    }
+                }
+            }
+            return help.ToString();
         }
     }
 }

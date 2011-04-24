@@ -3,6 +3,7 @@ using Mailer;
 using NUnit.Framework;
 using CommandLine;
 using System.IO;
+using System.Text;
 
 namespace MailerTest {
 
@@ -30,9 +31,20 @@ namespace MailerTest {
             string[] args = new string[] { "-h" };
             StringWriter writer = new StringWriter();
             CommandLineParserSettings settings = new CommandLineParserSettings(writer);
+            StringBuilder expectedHelpText = new StringBuilder();
+            expectedHelpText.AppendLine("CommandLine Utility to send email using SMTP protocol");
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "f", "from".PadRight(15, ' '), "From address"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "t", "to".PadRight(15, ' '), "To address seperated by comma"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "c", "cc".PadRight(15, ' '), "Cc address seperated by comma"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "b", "bcc".PadRight(15, ' '), "Bcc address seperated by comma"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "s", "subject".PadRight(15, ' '), "Subject for the email"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "m", "body".PadRight(15, ' '), "Email body"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "a", "attachment".PadRight(15, ' '), "Files to be attached seperated by comma"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "l", "configration".PadRight(15, ' '), "Mail client configuration file"));
+            expectedHelpText.AppendLine(String.Format("-{0} -{1}{2}", "g", "generate".PadRight(15, ' '), "Generates sample configuration file"));
 
             Options option = Options.Create(args, settings);
-            Assert.AreEqual("", writer.ToString());
+            Assert.AreEqual(expectedHelpText.ToString(), writer.ToString());
         }
 
         [Test]
@@ -93,6 +105,14 @@ namespace MailerTest {
 
             Options option = Options.Create(args);
             Assert.AreEqual("mail_client.conf", option.ConfigurationFile);
+        }
+
+        [Test]
+        public void ShouldAssignSampleConfigurationFilePath() {
+            string[] args = new String[] { "-gsample.txt", "-lmail_client.conf" };
+
+            Options option = Options.Create(args);
+            Assert.AreEqual("sample.txt", option.SampleConfigurationFilePath);
         }
 
         [Test]
