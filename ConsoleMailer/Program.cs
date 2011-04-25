@@ -33,8 +33,13 @@ namespace ConsoleMailer {
                 return;
             }
 
-            smtpMail = new Mail(options, new NativeSmtpClient(configuration));
-            smtpMail.Send();
+            try {
+                smtpMail = new Mail(options, new NativeSmtpClient(configuration));
+                smtpMail.Send();
+            }
+            catch (Exception ex) {
+                Console.WriteLine("Unable to send the email reason: {0}", ex.Message);
+            }
         }
 
         static void PrintErrors(ErrorList errors) {
